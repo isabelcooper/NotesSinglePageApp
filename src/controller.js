@@ -1,50 +1,55 @@
-var textbox = document.getElementById('textbox');
-var submit = document.getElementById('submit');
-var previews = document.getElementById('previews');
-var notepad = new Notepad;
+var notepad = new Notepad();
+var counter = 1;
+var submit = document.getElementById("submit");
+var main = document.getElementById("main");
 
-submit.addEventListener('submit', function(event) { buildList(event) })
+submit.addEventListener("submit", function(event) {
+  buildList(event);
+});
 
-// document.getElementById("test").addEventListener("click", function(event) { loadNote(event) })
+function buildList(event) {
+  event.preventDefault();
+  var textbox = document.getElementById("textbox");
+  var note = addNote(textbox.value);
+  addLinkElem(counter, note);
+  addListener();
+  counter++;
 
-function loadNote(event, note) {
-  event.preventDefault()
-  document.getElementById("main").innerHTML =`${note.body}`
+  function addListener() {
+    document.getElementById(counter).addEventListener("click", function(event) {
+      loadNote(event);
+    });
+
+    function loadNote(event) {
+      event.preventDefault();
+      main.innerHTML = `${note.body}`;
+    }
+  }
+
+  function addNote(text) {
+    if (text) {
+      note = notepad.add(text);
+    }
+    return note;
+  }
+
+  function addLinkElem(num, note) {
+    var previews = document.getElementById("previews");
+    previews.innerHTML += `<a id=${num} href = "">${note.preview()}</a><br>`;
+  }
 }
 
-function getText(event) {
-  event.preventDefault()
-  if (textbox.value) {
-    notepad.add(textbox.value);
-    textbox.value = "";
-    showPreviews()
-  };
-};
+// var home = document.getElementById('home')
+// home.addEventListener('click', function(event) { goHome(event) })
 
-function showPreviews() {
-  previews.innerHTML = notepad.previewDisplay()
-}
-
-
-
-var counter = 1
-
-function buildList(event){
-  event.preventDefault()
-  note = addNote(textbox.value)
-  previews.innerHTML += addLinkElem(counter,note)
-  console.log(document.getElementById(counter))
-  document.getElementById(counter).addEventListener('click', function(event){loadNote(event, note)});
-  counter ++;
-};
-
-function addNote(text){
-   if (text) {
-    note = notepad.add(text)}
-
-    return note
-}
-
-function addLinkElem(num,note){
-  return(`<a id=${num} href = "">${note.preview()}</a><br>`)
-}
+// function goHome(event){
+//   event.preventDefault()
+//   console.log(notepad.notes)
+//    main.innerHTML = `test1 + ${notepad.notes.forEach(note => addLinkElem(1,note))}`
+// };
+//
+//
+//   function addLinkElem(num,note){
+//     var previews = document.getElementById('previews');
+//     previews.innerHTML += (`<a id=${num} href = "">${note.preview()}</a><br>`)
+//   }
